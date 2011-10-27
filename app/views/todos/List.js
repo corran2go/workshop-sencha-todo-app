@@ -1,4 +1,4 @@
-App.views.todosList = Ext.extend(Ext.Panel, {
+App.views.TodosList = Ext.extend(Ext.Panel, {
     // initialize the UI
     initComponent: function() {
         // create add button
@@ -31,13 +31,7 @@ App.views.todosList = Ext.extend(Ext.Panel, {
             xtype: 'list',
             // display the title
             itemTpl: '{title}',
-            // static data without store
-            data: [
-                { title: 'Todo 1' },
-                { title: 'Todo 2' },
-                { title: 'Todo 3' }
-            ],
-            store: null,
+            store: App.stores.todos,
             // add listeners
             listeners: {
                 itemtap: this.onItemtapAction,
@@ -54,19 +48,26 @@ App.views.todosList = Ext.extend(Ext.Panel, {
         });
 
         // call super class
-        App.views.todosList.superclass.initComponent.call(this);
+        App.views.TodosList.superclass.initComponent.call(this);
     },
 
     // handle add button
     onAddAction: function() {
-        alert('add todo');
+        Ext.dispatch({
+            controller: 'Todos',
+            action: 'newForm'
+        });
     },
 
     // handle list click/tap
-    onItemtapAction: function() {
-        alert('list tap');
+    onItemtapAction: function(list, index, item, e) {
+        Ext.dispatch({
+            controller: 'Todos',
+            action: 'editForm',
+            index: index
+        });
     }
 });
 
 // register custom xtype
-Ext.reg('App.views.todosList', App.views.todosList);
+Ext.reg('App.views.TodosList', App.views.TodosList);

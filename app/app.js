@@ -8,6 +8,10 @@ new Ext.Application(
         launch: function() {
             // create the main viewport
             this.views.viewport = new this.views.Viewport();
+
+            // create a reference to the view
+            this.views.todosList = this.views.viewport.down('#todosList');
+            this.views.todosForm = this.views.viewport.down('#todosForm');
         }
     }
 );
