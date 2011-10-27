@@ -1,0 +1,448 @@
+Todo: index.html Kommentar :
+<!-- app, models, stores, views, controllers [in that order!] -->
+
+----
+
+- Sencha Touch Quick Start
+    http://www.sencha.com/learn/sencha-touch-quick-start/
+
+- Hello Sencha Touch auschecken (master)
+    https://github.com/corran2go/hello-sencha-touch
+
+- Sourcen studieren
+
+- Developer Tools öffnen um im Browser laden
+
+- namespace erzeugen
+        // creates a 'App' object/namespace
+        name: 'App',
+
+- Viewport verwenden
+            // create the main viewport
+            this.views.viewport = new this.views.Viewport();
+
+- Viewport erstellen 'App.views.Viewport'
+// the main viewport is a subclass of a panel
+App.views.Viewport = Ext.extend(Ext.Panel, {
+
+- im Browser neu laden, Fehler in der Console
+
+- Viewport in index.html eintragen
+        <!-- views -->
+        <script src="app/views/Viewport.js" type="text/javascript"></script>
+
+- Todo Liste erstellen 'views/todos/List'
+App.views.TodosList = Ext.extend(Ext.Panel, {
+    // initialize the UI
+    initComponent: function() {
+        // call super class
+        App.views.TodosList.superclass.initComponent.call(this);
+    }
+});
+
+- Add Button erstellen
+        // create add button
+        var addButton = {
+            itemId: 'addButton',
+            // display default add icon
+            iconCls: 'add',
+            iconMask: true,
+            ui: 'plain',
+            // click/tap handler
+            handler: this.onAddAction,
+            scope: this
+        };
+...
+    // handle add button
+    onAddAction: function() {
+        alert('add todo');
+    }
+
+- Titel-Bar erstellen
+        // create title bar
+        var titlebar = {
+            xtype: 'toolbar',
+            dock: 'top',
+            title: 'Todos',
+            // add toobar items
+            items: [
+                // spacer takes all remaining space -> button is right aligned
+                { xtype: 'spacer' },
+                addButton
+            ]
+        };
+
+- Liste erstellen
+        // create list
+        var list = {
+            xtype: 'list',
+            // display the title
+            itemTpl: '{title}',
+            // static data without store
+            data: [
+                { title: 'Todo 1' },
+                { title: 'Todo 2' },
+                { title: 'Todo 3' }
+            ],
+            store: null,
+            // add listeners
+            listeners: {
+                itemtap: this.onItemtapAction,
+                scope: this
+            }
+        };
+...
+    // handle list click/tap
+    onItemtapAction: function() {
+        alert('list tap');
+    }
+
+- Elemente anzeigen
+        // place items by adding them to the List configuration
+        Ext.apply(this, {
+            html: 'list placeholder',
+            layout: 'fit',
+            dockedItems: [ titlebar ],
+            items: [ list ]
+        });
+
+- eigenen xtype 'App.views.todosList' registrieren
+// register custom xtype
+Ext.reg('App.views.TodosList', App.views.TodosList);
+
+- Todo Liste in index.html eintragen
+        <script src="app/views/todos/List.js" type="text/javascript"></script>
+
+- Todo Liste im Viewport anzeigen
+    initComponent: function() {
+        // place items by adding them to the List configuration
+        Ext.apply(this, {
+            items: [
+                {
+                    // use the custom xtype to add our todos list
+                    xtype: 'App.views.TodosList',
+                    id: 'todosList'
+                }
+            ]
+        });
+        App.views.Viewport.superclass.initComponent.call(this);
+    }
+
+- im Browser neu laden (branch listview)
+
+- Model erstellen 'models/Todo'
+App.models.Todo = Ext.regModel('Todo', {
+    // create the Todo attributes
+    fields: [
+        {
+            name: 'id',
+            type: 'int'
+        },
+        {
+            name: 'title',
+            type: 'string'
+        },
+        {
+            name: 'description',
+            type: 'string'
+        }
+    ],
+    // store Todos in HTML5 localstorage
+    proxy: {
+        type: 'localstorage',
+        id: 'todo-proxy'
+    }
+});
+
+- Todo Model in index.html eintragen
+        <!-- models -->
+        <script src="app/models/Todo.js" type="text/javascript"></script>
+
+- Store erstellen 'stores/Todos'
+App.stores.todos = new Ext.data.Store({
+    model: 'Todo',
+    autoLoad: true
+});
+
+- Todo Store in index.html eintragen
+        <!-- stores -->
+        <script src="app/stores/Todos.js" type="text/javascript"></script>
+
+- Store in der Todo Liste verwenden
+            store: App.stores.todos,
+
+- Todo Detailseite/Formular erstellen 'views/todos/Form'
+App.views.TodosForm = Ext.extend(Ext.form.FormPanel, {
+    defaultInstructions: 'Text eintragen/ändern',
+    initComponent: function() {
+        var cancelButton = {
+            text: 'Zurück',
+            ui: 'back',
+            handler: this.onCancelAction,
+            scope: this
+        };
+
+        var titlebar = {
+            id: 'todoFormTitlebar',
+            xtype: 'toolbar',
+            title: 'Neues Todo',
+            items: [ cancelButton ]
+        };
+
+        var saveButton = {
+            id: 'todoFormSaveButton',
+            text: 'Speichern',
+            ui: 'confirm',
+            handler: this.onSaveAction,
+            scope: this
+        };
+
+        var deleteButton = {
+            id: 'todoFormDeleteButton',
+            text: 'Löschen',
+            ui: 'decline',
+            handler: this.onDeleteAction,
+            scope: this
+        };
+
+        var buttonbar = {
+            xtype: 'toolbar',
+            dock: 'bottom',
+            items: [
+                deleteButton,
+                { xtype: 'spacer' },
+                saveButton
+            ]
+        };
+
+        var fields = {
+            xtype: 'fieldset',
+            id: 'todoFormFieldset',
+            title: 'Todo',
+            instructions: this.defaultInstructions,
+            defaults: {
+                xtype: 'textfield',
+                labelAlign: 'left',
+                labelWidth: '40%',
+                required: false,
+                useClearIcon: true,
+                autoCapitalize : false
+            },
+            items: [
+                {
+                    name : 'title',
+                    label: 'Titel'
+                },
+                {
+                    name: 'description',
+                    label: 'Beschreibung'
+                }
+            ]
+        };
+
+        Ext.apply(this, {
+            scroll: 'vertical',
+            dockedItems: [ titlebar, buttonbar ],
+            items: [ fields ],
+            listeners: {
+                beforeactivate: function() {
+                    var deleteButton = this.down('#todoFormDeleteButton'),
+                        saveButton = this.down('#todoFormSaveButton'),
+                        titlebar = this.down('#todoFormTitlebar'),
+                        model = this.getRecord();
+
+                    if (model.phantom) {
+                        titlebar.setTitle('Neues Todo');
+                        saveButton.setText('Speichern');
+                        deleteButton.hide();
+                    } else {
+                        titlebar.setTitle('Todo bearbeiten');
+                        saveButton.setText('Aktualisieren');
+                        deleteButton.show();
+                    }
+                },
+                deactivate: function() { this.resetForm() }
+            }
+        });
+
+        App.views.TodosForm.superclass.initComponent.call(this);
+    },
+
+    onCancelAction: function() {
+        Ext.dispatch({
+            controller: 'Todos',
+            action: 'index'
+        });
+    },
+
+    onSaveAction: function() {
+        var model = this.getRecord();
+
+        Ext.dispatch({
+            controller: 'Todos',
+            action    : (model.phantom ? 'save' : 'update'),
+            data      : this.getValues(),
+            record    : model,
+            form      : this
+        });
+    },
+
+    onDeleteAction: function() {
+        Ext.Msg.confirm("Todo entfernen?", "", function(answer) {
+            if (answer === "yes") {
+                Ext.dispatch({
+                    controller: 'Todos',
+                    action    : 'remove',
+                    record    : this.getRecord()
+                });
+            }
+        }, this);
+    },
+
+    resetForm: function() {
+        var fieldset = this.down('#todoFormFieldset');
+        fieldset.setInstructions(this.defaultInstructions);
+        this.reset();
+    }
+});
+
+Ext.reg('App.views.TodosForm', App.views.TodosForm);
+
+- Todo Formular in index.html eintragen
+        <script src="app/views/todos/Form.js" type="text/javascript"></script>
+
+- im Viewport das Layout ändern
+    layout: 'card',
+
+- Todo Formular im Viewport eintragen
+                {
+                    xtype: 'App.views.TodosForm',
+                    id: 'todosForm'
+                }
+
+- im Viewport das Wechseln zwischen views ermöglichen
+    reveal: function(target) {
+        var direction = (target === 'todosList') ? 'right' : 'left'
+        this.setActiveItem(
+            App.views[target],
+            { type: 'slide', direction: direction }
+        );
+    }
+
+- in der App Verweise auf die Views erstellen
+            // create a reference to the view
+            this.views.todosList = this.views.viewport.down('#todosList');
+            this.views.todosForm = this.views.viewport.down('#todosForm');
+
+- Todo Controller erstellen 'controllers/Todos'
+Ext.regController('Todos', {
+    store: App.stores.todos,
+
+    index: function() {
+        App.views.viewport.reveal('todosList');
+    },
+
+    newForm: function() {
+        var model = new App.models.Todo()
+        App.views.todosForm.load(model);
+        App.views.viewport.reveal('todosForm');
+    },
+
+    editForm: function(params) {
+        var model = this.store.getAt(params.index);
+        App.views.todosForm.load(model);
+        App.views.viewport.reveal('todosForm');
+    },
+
+    save: function(params) {
+        params.record.set(params.data);
+        var errors = params.record.validate();
+
+        if (errors.isValid()) {
+            this.store.create(params.data);
+            this.index();
+        } else {
+            alert(errors);
+        }
+    },
+
+    update: function(params) {
+        var tmpTodo = new App.models.Todo(params.data),
+            errors = tmpTodo.validate()
+
+        if (errors.isValid()) {
+            params.record.set(params.data);
+            params.record.save();
+            this.index();
+        } else {
+            alert(errors);
+        }
+    },
+
+    remove: function(params) {
+        this.store.remove(params.record);
+        this.store.sync();
+        this.index();
+    }
+});
+
+- Todo Controller in index.html eintragen
+        <!-- controllers -->
+        <script src="app/controllers/Todos.js" type="text/javascript"></script>
+
+- Todo Controller verwenden in
+    - todos/List
+    onAddAction: function() {
+        Ext.dispatch({
+            controller: 'Todos',
+            action: 'newForm'
+        });
+    },
+...
+    onItemtapAction: function(list, index, item, e) {
+        Ext.dispatch({
+            controller: 'Todos',
+            action: 'editForm',
+            index: index
+        });
+    }
+
+    - todos/Form
+    onCancelAction: function() {
+        Ext.dispatch({
+            controller: 'Todos',
+            action: 'index'
+        });
+    },
+...
+    onSaveAction: function() {
+        var model = this.getRecord();
+
+        Ext.dispatch({
+            controller: 'Todos',
+            action    : (model.phantom ? 'save' : 'update'),
+            data      : this.getValues(),
+            record    : model,
+            form      : this
+        });
+    },
+...
+    onDeleteAction: function() {
+        Ext.Msg.confirm("Todo entfernen?", "", function(answer) {
+            if (answer === "yes") {
+                Ext.dispatch({
+                    controller: 'Todos',
+                    action    : 'remove',
+                    record    : this.getRecord()
+                });
+            }
+        }, this);
+    },
+
+- im Browser neu laden (branch detailview)
+
+
+
+
+
+
