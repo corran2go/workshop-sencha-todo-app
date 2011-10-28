@@ -1,4 +1,4 @@
-App.views.todosList = Ext.extend(Ext.Panel, {
+App.views.TodosList = Ext.extend(Ext.Panel, {
     // initialize the UI
     initComponent: function() {
         // create add button
@@ -8,7 +8,7 @@ App.views.todosList = Ext.extend(Ext.Panel, {
             iconCls: 'add',
             iconMask: true,
             ui: 'plain',
-            // click/tap handler
+            // react on button click/tap
             handler: this.onAddAction,
             scope: this
         };
@@ -18,7 +18,7 @@ App.views.todosList = Ext.extend(Ext.Panel, {
             xtype: 'toolbar',
             dock: 'top',
             title: 'Todos',
-            // add toobar items
+            // add button to toolbar
             items: [
                 // spacer takes all remaining space -> button is right aligned
                 { xtype: 'spacer' },
@@ -29,16 +29,16 @@ App.views.todosList = Ext.extend(Ext.Panel, {
         // create list
         var list = {
             xtype: 'list',
-            // display the title
+            // display the todo title
             itemTpl: '{title}',
             // static data without store
+            store: null,
             data: [
                 { title: 'Todo 1' },
                 { title: 'Todo 2' },
                 { title: 'Todo 3' }
             ],
-            store: null,
-            // add listeners
+            // react on todo-item click/tap
             listeners: {
                 itemtap: this.onItemtapAction,
                 scope: this
@@ -47,14 +47,13 @@ App.views.todosList = Ext.extend(Ext.Panel, {
 
         // place items by adding them to the List configuration
         Ext.apply(this, {
-            html: 'list placeholder',
             layout: 'fit',
             dockedItems: [ titlebar ],
             items: [ list ]
         });
 
         // call super class
-        App.views.todosList.superclass.initComponent.call(this);
+        App.views.TodosList.superclass.initComponent.call(this);
     },
 
     // handle add button
@@ -69,4 +68,4 @@ App.views.todosList = Ext.extend(Ext.Panel, {
 });
 
 // register custom xtype
-Ext.reg('App.views.todosList', App.views.todosList);
+Ext.reg('App.views.TodosList', App.views.TodosList);
