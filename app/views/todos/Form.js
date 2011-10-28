@@ -1,5 +1,4 @@
 App.views.TodosForm = Ext.extend(Ext.form.FormPanel, {
-    defaultInstructions: 'Text eintragen/ändern',
     initComponent: function() {
         var cancelButton = {
             text: 'Zurück',
@@ -41,20 +40,27 @@ App.views.TodosForm = Ext.extend(Ext.form.FormPanel, {
             ]
         };
 
+        // create form fields
         var fields = {
             xtype: 'fieldset',
             id: 'todoFormFieldset',
             title: 'Todo',
-            instructions: this.defaultInstructions,
+            instructions: 'Bitte Titel und Beschreibung eingeben',
+            // common field config
             defaults: {
                 xtype: 'textfield',
                 labelAlign: 'left',
-                labelWidth: '40%',
+                labelWidth: '30%',
                 required: false,
                 useClearIcon: true,
-                autoCapitalize : false
+                autoCapitalize: false
             },
             items: [
+                {
+                    // bind the form to the model via name
+                    name: 'id',
+                    hidden: true
+                },
                 {
                     name : 'title',
                     label: 'Titel'
@@ -71,12 +77,14 @@ App.views.TodosForm = Ext.extend(Ext.form.FormPanel, {
             dockedItems: [ titlebar, buttonbar ],
             items: [ fields ],
             listeners: {
+                // prepare the form for creating or updating a todo before it is shown
                 beforeactivate: function() {
                     var deleteButton = this.down('#todoFormDeleteButton'),
                         saveButton = this.down('#todoFormSaveButton'),
                         titlebar = this.down('#todoFormTitlebar'),
                         model = this.getRecord();
 
+                    // a new todo is not yet saved so it is in phantom state
                     if (model.phantom) {
                         titlebar.setTitle('Neues Todo');
                         saveButton.setText('Speichern');
@@ -87,7 +95,10 @@ App.views.TodosForm = Ext.extend(Ext.form.FormPanel, {
                         deleteButton.show();
                     }
                 },
-                deactivate: function() { this.resetForm() }
+                // clear the form after hiding
+                deactivate: function() {
+                    this.resetForm()
+                }
             }
         });
 
@@ -114,8 +125,9 @@ App.views.TodosForm = Ext.extend(Ext.form.FormPanel, {
     },
 
     onDeleteAction: function() {
-        Ext.Msg.confirm("Todo entfernen?", "", function(answer) {
-            if (answer === "yes") {
+        // ask before deleting
+        Ext.Msg.confirm('Todo löschen?', '', function(answer) {
+            if (answer === 'yes') {
                 Ext.dispatch({
                     controller: 'Todos',
                     action    : 'remove',
@@ -126,8 +138,6 @@ App.views.TodosForm = Ext.extend(Ext.form.FormPanel, {
     },
 
     resetForm: function() {
-        var fieldset = this.down('#todoFormFieldset');
-        fieldset.setInstructions(this.defaultInstructions);
         this.reset();
     }
 });

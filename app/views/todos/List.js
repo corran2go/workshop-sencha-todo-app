@@ -8,7 +8,7 @@ App.views.TodosList = Ext.extend(Ext.Panel, {
             iconCls: 'add',
             iconMask: true,
             ui: 'plain',
-            // click/tap handler
+            // react on button click/tap
             handler: this.onAddAction,
             scope: this
         };
@@ -18,7 +18,7 @@ App.views.TodosList = Ext.extend(Ext.Panel, {
             xtype: 'toolbar',
             dock: 'top',
             title: 'Todos',
-            // add toobar items
+            // add button to toolbar
             items: [
                 // spacer takes all remaining space -> button is right aligned
                 { xtype: 'spacer' },
@@ -29,10 +29,11 @@ App.views.TodosList = Ext.extend(Ext.Panel, {
         // create list
         var list = {
             xtype: 'list',
-            // display the title
+            // display the todo title
             itemTpl: '{title}',
+            // load/save Todo from/to our store
             store: App.stores.todos,
-            // add listeners
+            // react on todo-item click/tap
             listeners: {
                 itemtap: this.onItemtapAction,
                 scope: this
@@ -41,7 +42,6 @@ App.views.TodosList = Ext.extend(Ext.Panel, {
 
         // place items by adding them to the List configuration
         Ext.apply(this, {
-            html: 'list placeholder',
             layout: 'fit',
             dockedItems: [ titlebar ],
             items: [ list ]
@@ -53,6 +53,7 @@ App.views.TodosList = Ext.extend(Ext.Panel, {
 
     // handle add button
     onAddAction: function() {
+        // call 'newForm()' on 'Todos' controller
         Ext.dispatch({
             controller: 'Todos',
             action: 'newForm'
