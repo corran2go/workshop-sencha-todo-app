@@ -1,5 +1,5 @@
 // create the Application
-new Ext.Application(
+Ext.regApplication(
     // configure it by passing an object to the constructor
     {
         // 'launch()' is called after the document finished loading
