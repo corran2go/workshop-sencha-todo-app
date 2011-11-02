@@ -125,16 +125,11 @@ App.views.TodosForm = Ext.extend(Ext.form.FormPanel, {
     },
 
     onDeleteAction: function() {
-        // ask before deleting
-        Ext.Msg.confirm('Todo löschen?', '', function(answer) {
-            if (answer === 'yes') {
-                Ext.dispatch({
-                    controller: 'Todos',
-                    action    : 'remove',
-                    record    : this.getRecord()
-                });
-            }
-        }, this);
+        Ext.dispatch({
+            controller: 'Todos',
+            action    : 'remove',
+            record    : this.getRecord()
+        });
     },
 
     resetForm: function() {
