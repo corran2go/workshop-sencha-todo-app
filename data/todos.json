@@ -1,0 +1,8 @@
+{
+    "success": true,
+    "todos": [
+        { "id": 4711, "title": "Try AjaxProxy", "description": "AjaxProxy is one of the most widely-used ways of getting data into your application." },
+        { "id": 4712, "title": "Try RestProxy", "description": "RestProxy is a specialization of the AjaxProxy which simply maps the four actions to RESTful HTTP verbs." },
+        { "id": 4713, "title": "Try ScriptTagProxy", "description": "ScriptTagProxy is useful when you need to load data from a domain other than the one your application is running on." }
+    ]
+}

@@ -32,7 +32,9 @@ App.views.TodosList = Ext.extend(Ext.Panel, {
             // display the todo title
             itemTpl: '{title}',
             // load/save Todo from/to our store
-            store: App.stores.todos,
+            // store: App.stores.todos,
+            // read remote Todos
+            store: App.stores.remoteTodos,
             // react on todo-item click/tap
             listeners: {
                 itemtap: this.onItemtapAction,

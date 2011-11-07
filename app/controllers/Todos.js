@@ -1,6 +1,8 @@
 Ext.regController('Todos', {
     // use our store
-    store: App.stores.todos,
+    // store: App.stores.todos,
+    // read remote Todos
+    store: App.stores.remoteTodos,
 
     index: function() {
         App.views.viewport.reveal('todosList');
