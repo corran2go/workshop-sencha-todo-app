@@ -35,14 +35,20 @@
     <body>
         <img class="loading-image" src="resources/images/loading.gif"></img>
         <script type="text/javascript">
-            // ask the user to refresh an updated version of the cached page
             if (window.applicationCache) {
+              // ask the user to refresh an updated version of the cached page
               window.applicationCache.addEventListener('updateready', function(e) {
-                if (window.applicationCache.status == window.applicationCache.UPDATEREADY || window.applicationCache.status == window.applicationCache.OBSOLETE) {
+                if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
                   window.applicationCache.swapCache();
                   if (confirm('A new version of this app is available. Load it?')) {
                     window.location.reload();
                   }
+                }
+              }, false);
+              // refresh the app after cache has been invalidated
+              window.applicationCache.addEventListener('obsolete', function(e) {
+                if (window.applicationCache.status == window.applicationCache.OBSOLETE) {
+                  window.location.reload();
                 }
               }, false);
             } else {
