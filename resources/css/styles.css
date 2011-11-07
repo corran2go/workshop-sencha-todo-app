@@ -1,7 +1,7 @@
 @media screen and (orientation:landscape) and (max-width: 480px) {
   .loading-image {
-    margin-left: 224px;
-    margin-top: 144px;
+    margin-left: 32px;
+    margin-top: 32px;
   }
 }
 
@@ -14,8 +14,8 @@
 
 @media screen and (orientation:portrait) and (max-width: 480px) {
   .loading-image {
-    margin-left: 144px;
-    margin-top: 224px;
+    margin-left: 32px;
+    margin-top: 32px;
   }
 }
 
