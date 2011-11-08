@@ -56,11 +56,6 @@ App.views.TodosForm = Ext.extend(Ext.form.FormPanel, {
                 autoCapitalize: false
             },
             items: [
-/*                {
-                    // bind the form to the model via name
-                    name: 'id',
-                    hidden: true
-                },*/
                 {
                     name : 'title',
                     label: 'Titel'
