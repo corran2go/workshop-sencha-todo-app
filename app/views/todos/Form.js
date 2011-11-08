@@ -113,13 +113,16 @@ App.views.TodosForm = Ext.extend(Ext.form.FormPanel, {
     },
 
     onSaveAction: function() {
-        var model = this.getRecord();
+        var record = this.getRecord();
+        // store form data in record
+        this.updateRecord(record, true);
+        record.setDirty();
 
         Ext.dispatch({
             controller: 'Todos',
-            action    : (model.phantom ? 'save' : 'update'),
+            action    : (record.phantom ? 'save' : 'update'),
             data      : this.getValues(),
-            record    : model,
+            record    : record,
             form      : this
         });
     },
