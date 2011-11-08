@@ -56,11 +56,11 @@ App.views.TodosForm = Ext.extend(Ext.form.FormPanel, {
                 autoCapitalize: false
             },
             items: [
-                {
+/*                {
                     // bind the form to the model via name
                     name: 'id',
                     hidden: true
-                },
+                },*/
                 {
                     name : 'title',
                     label: 'Titel'
@@ -81,11 +81,10 @@ App.views.TodosForm = Ext.extend(Ext.form.FormPanel, {
                 beforeactivate: function() {
                     var deleteButton = this.down('#todoFormDeleteButton'),
                         saveButton = this.down('#todoFormSaveButton'),
-                        titlebar = this.down('#todoFormTitlebar'),
-                        model = this.getRecord();
+                        titlebar = this.down('#todoFormTitlebar');
 
                     // a new todo is not yet saved so it is in phantom state
-                    if (model.phantom) {
+                    if (this.getRecord().phantom) {
                         titlebar.setTitle('Neues Todo');
                         saveButton.setText('Speichern');
                         deleteButton.hide();
@@ -113,13 +112,16 @@ App.views.TodosForm = Ext.extend(Ext.form.FormPanel, {
     },
 
     onSaveAction: function() {
-        var model = this.getRecord();
+        var record = this.getRecord();
+        // store form data in record
+        this.updateRecord(record, true);
+        record.setDirty();
 
         Ext.dispatch({
             controller: 'Todos',
-            action    : (model.phantom ? 'save' : 'update'),
+            action    : (record.phantom ? 'save' : 'update'),
             data      : this.getValues(),
-            record    : model,
+            record    : record,
             form      : this
         });
     },
