@@ -13,10 +13,5 @@ App.models.Todo = Ext.regModel('Todo', {
             name: 'description',
             type: 'string'
         }
-    ],
-    // store Todos in HTML5 localstorage
-    proxy: {
-        type: 'localstorage',
-        id: 'todo-proxy'
-    }
+    ]
 });
