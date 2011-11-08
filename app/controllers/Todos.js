@@ -23,8 +23,6 @@ Ext.regController('Todos', {
     },
 
     save: function(params) {
-        // store form data in record
-        params.record.set(params.data);
         // add record to store
         this.store.add(params.record);
         // sync store and refresh view
@@ -33,11 +31,7 @@ Ext.regController('Todos', {
     },
 
     update: function(params) {
-        // store form data in record
-        params.record.set(params.data);
-        // save updated record
-        params.record.save();
-        // refresh view
+        this.store.sync();
         this.index();
     },
 

@@ -5,6 +5,9 @@ App.stores.todos = new Ext.data.Store({
     // store Todos in HTML5 localstorage
     proxy: {
         type: 'localstorage',
-        id: 'todo-proxy'
+        id: 'todo-proxy',
+        proxy: {
+          idProperty: 'id'
+        }
     }
 });
